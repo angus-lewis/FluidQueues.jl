@@ -1,3 +1,20 @@
+struct UnboundedFluidQueue <: Model
+    T::Array{Float64,2}
+    S::PhaseSet
+    function UnboundedFluidQueue(T::Array{Float64,2}, S::PhaseSet)
+        DiscretisedFluidQueues._fluid_queue_checks(T,S)
+        !(all(sum(T,dims=2).≈0.0))&&@warn "row sums of T should be 0"
+        return new(T,S)
+    end
+end
+
+"""
+    UnboundedFluidQueue(T::Array{Float64,2},c::Array{Float64,1},b::Float64)
+
+Alias to `UnboundedFluidQueue(T,PhaseSet(c))`.
+"""
+UnboundedFluidQueue(T::Array{Float64,2},c::Array{Float64,1}) = UnboundedFluidQueue(T,PhaseSet(c))
+
 """
     _model_dicts(model::Model) 
 
